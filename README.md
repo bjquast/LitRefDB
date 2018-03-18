@@ -212,7 +212,7 @@ sudo chmod -R ugo+x /usr/local/lib/site_perl/
 
 Because the web interface uses http basic authentication it is necessary to limit access to the https protocol. To achive that configure a RewriteRule in Apaches default configuration and limit access to the cgi-bin/dbserver12 directory in the ssl-configuration: 
 
-Set up RewriteRules in default Apache config to enforce ssl connection
+Set up RewriteRules in **default** Apache config (e. g. /etc/apache2/sites-enabled/default.conf) to enforce ssl connection
 
 ```
 # for the domain name
@@ -221,6 +221,38 @@ RewriteRule ^/(.*) https://www.<domainname>/dbserver12/$1 [NE,L]
 RewriteCond %{REQUEST_URI}   ^/cgi-bin/dbserver12 [NC]
 RewriteRule ^/(.*) https://www.<domainname>/cgi-bin/dbserver12/$1 [NE,L]
 ```
+
+### Set up Directory directives in ssl configuration
+
+Set up directory directives in your Apache configuration for **ssl** (e. g. /etc/apache2/sites-enabled/ssl.conf):
+
+```
+# basic authentication on html DocumentRoot
+  <Directory /var/www/html/dbserver12>
+        AuthUserFile /etc/apache2/dbserver12_passwd
+        AuthType Basic
+        AuthName dbserver12
+        require valid-user
+    </Directory>
+
+  ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+ <FilesMatch "\.(cgi|shtml|phtml|php)$">
+                  SSLOptions +StdEnvVars
+  </FilesMatch>
+  <Directory /usr/lib/cgi-bin>
+                  SSLOptions +StdEnvVars
+  </Directory>
+
+# add a Directory directive that restrictes access to the dbserver12 dir in cgi-bin 
+  <Directory /usr/lib/cgi-bin/slides_loader>
+               AuthUserFile /etc/apache2/dbserver12_passwd
+               AuthType Basic
+               AuthName dbserver12
+               Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+               require valid-user
+  </Directory>
+```
+
 
 
 
