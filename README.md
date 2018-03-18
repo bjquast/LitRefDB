@@ -1,7 +1,7 @@
 # LitRefDB
 Database application with old style web interface, used for managing literature refences in my research projects. Imports and exports bibtex and RIS format, new filters are welcome. It has a user management based on http basic authentication and is able to store attachements to the references.
 
-## Requierements
+## Requirements
 
 Apache2: mod_cgi, mod_auth_basic, mod_ssl
 Perl: CGI, CGI::Carp, DBI, Archive::Zip, IO::String, IO::File
