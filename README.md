@@ -4,7 +4,9 @@ Database application with old style web interface, used for managing literature 
 ## Requirements
 
 Apache2: mod_cgi, mod_auth_basic, mod_ssl
+
 Perl: CGI, CGI::Carp, DBI, Archive::Zip, IO::String, IO::File
+
 MySQL database engine
 
 ## Installation
@@ -252,6 +254,80 @@ Set up directory directives in your Apache configuration for **ssl** (e. g. /etc
                require valid-user
   </Directory>
 ```
+
+### Create htpasswd file
+
+Create the htpasswd file for restricting access to the html and cgi-bin directories. The command must add a first user to the password file
+
+`sudo htpasswd -c /etc/apache2/dbserver12_passwd <user1>`
+
+Add another user
+
+`sudo htpasswd /etc/apache2/dbserver12_passwd <user2>`
+
+### Enable the needed modules in Apache2
+
+```
+sudo a2enmod ssl rewrite basic_auth
+```
+
+### Restart Apache2 webserver
+
+```
+sudo apache2ctl configtest
+sudo service apache2 restart
+```
+
+## Calling the web page
+
+Call the page directly with 
+`https://<yourdomain.xx>/cgi-bin/<dbserver12>/dbstart.pl`
+
+or call the entry page with 
+`https://<yourdomain.xx>/<dbserver12>/index.html`
+
+## Result 
+You can add, search, edit, import, export reference entries in the database. All entries are viewable by the other registered users. The only exception is the `Notes` field that is private for each user. On the left side there is a frame (Web 1.0, I told so..) for searches. The upper frame shows the resulting entries, the lower shows details of the entry selected in the upper frame.
+
+Don't expect that the import and export filters work very good. Several Publishers use their own dialect of RIS and bibtex and I am afraid, my software has added another dialect, due to the lack of time and fun to go to all the documentation on the formats. Help is welcome!
+
+
+### Search frame
+
+#### Search parameters
+
+ * comparison: `contains`: all words will be wildcarded befroe and after their first and last letter (earth will be wildcarded %earth%), `is equal`: words will not be wildcarded
+ * order by: select the field by whch the resuls are ordered. `relevance` counts the occurences of the words in different fields e. g. abstract, keywords, author, title.. and sorts the reults by the found numbers of occurences. Thus entries with more fields filled up will often occur before others where only the title is filled in.
+ * data of: select the database of one or more specific users
+
+#### Search fields
+
+ * `simple search`: allows to enter multiple words. The search looks up the words in Author, Editor, Title, Abstract, Keywords, Journaltitle, Booktitle, Seriestitle.
+ * `detailed search`: allows to enter one word per field and select the category to search in. The fields can be conected with AND or OR connectors, but there is no specific order for doing the search, thus combining AND or OR connectors may result in unexpected results.
+ 
+### Result list frame
+ 
+The result frame shows up to 1000 search results on a page, if there are more they are available via a page link on top of the result list. The action selector allows to mark or unmark all results of the current search and to delete or export the marked entries. All actions are done after pressing the submit button right to the action selector. Delete and export actions will only work with marked entries and will present a confirmation (delete marked data sets) or settings page (export marked datasets). Use the browsers back button to cancel the action.
+
+The result list contains links to how details on an entry (click on author and year of an entry) and to download attachements if they are available (click on PDF in the title column of the result list)
+ 
+### Entry frame
+
+The frame shows the details of an entry selected in the result list. It also allows to insert a new entry or change or delete an entry if you are the owner of the entry. All actions on an entry are done by selecting the wanted action with the radio buttons on top of the frame and press the submit button.
+
+Actions are:
+ * `change`: save the entry after you have edited some of the fields in the entry
+ * `delete`: delete the entry, there will occure a confirmation page before the deletion is done. Use the back button of your browser to cancel the delete action
+ * `insert new dataset`: creates an empty entry page that can be filled and inserted by pressing the submit button
+ * `insert as new dataset`: copeis the current dataset to your own database. So it can be used to copy an entry from an other user and insert them into your own database. The `insert as new dataset` inserts the entry immediatly. If change your mind and do not want to keep the entry in your database you must delete it.
+
+### Export and import
+
+The export and import routines can be reached by pressing the `export data` or `import data` links at the bottom of the **Search frame**. The export or import page occurs in the Result list frame. There can be decided to export / import RIS or bibtex, import zip files with attached pdf-files and to export data without abstract or of a specific user.
+
+The import of zip files with pdfs will only work if they are linked in the RIS or bibtex file and are in a subfolder. Export some entries with pdfs as zip file (e. g. by choosing some in the Result list frame and selecting action export) and inspect the zip archive to get an idea how the RIS / bibtex file references the pdf files.
+
+ 
 
 
 
