@@ -1,0 +1,149 @@
+20140406	dbmodule/DbConnect.pm	Suchmuster für password geändert von \"(\w+)\" nach \"(.*)\" um auch Passwörter mit Sonderzeichen zu akzeptieren
+	fixes für apache-Fehlermeldungen:
+		dbmodule/SearchDocId.pm: "my" variable $erfolg masks earlier declaration in same scope at dbmodule/SearchDocId.pm line 88 / 97
+		dbmodule/QuestionResultsOb.pm: defined(@array) is deprecated at dbmodule/QuestionResultsOb.pm line 484.
+		searchform.pl: Use of uninitialized value $databasename in concatenation (.) or string at /usr/lib/cgi-bin-ssl/dbserver12_pdf/searchform.pl line 256 / 263
+		htmlmodule/details.pl: Argument "" isn't numeric in numeric ne (!=) at htmlmodule/PrintDetails.pm line 40.
+		central.pl: Use of uninitialized value $searchstring in string ne at /usr/lib/cgi-bin-ssl/dbserver_dev/central.pl line 529.
+		Use of uninitialized value $databasename in concatenation (.) or string at /usr/lib/cgi-bin-ssl/dbserver_dev/details.pl line 79 - 84
+	
+	
+	
+
+
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+dbserver12
+
+Insgesamt scheinen die Relevanzabfragen einige zusätzliche Abfragen zu bringen, was sich nicht so gut auf die Geschwindigkeit auswirkt. Muss wahrscheinlich nochmal durchgegangen werden, wo Abfragen eingespart werden können. 
+
+in DocDelete.pm die syntax der delete-anweisungen geändert, da vor from nur noch das Tabellenkürzel und nicht mehr der Tabellenname stehen darf
+
+In Bib2Hash.pm bei der Trennung der Datensätze ein oder mehrere Leerzeichen hinter dem @ und vor dem doctype erlaubt, da sich kaputte dotypes in der Datenbank beim Importieren aus verschiedenen Quellen angesammelt hatten. Beim Umdrehen der Autorennamen werden jetzt Umlaute nicht mehr getrennt, da nicht mehr nach einem hinten stehenden ganzen Wort (\w) für den Nachnamen gesucht wird, sondern Whitespaces ausgeschlossen werden (\S)
+
+Relevanzsuche in SearchRelevance.pm implementiert, dabei werden die alten Routinen für createtmptable, replace und selecttonewtable erhalten und genutzt um für jedes Abfragewort erstmal eine Tabelle zu erstellen. Danach wird wie bei der alten Suche erst die Verknüpfung der Tabellen durchgeführt, hier indem eine Tabelle mit allen docids und einer Spalte für die Relevanz der docid erstellt wird. Die Routine relortable erhöht die Relevanz in der docidtabelle bei einem Treffer, die Routine relandtable setzt die Relevanz bei allen docids für die kein Treffer gefunden wurde auf 0. Bei den docids mit Treffer wird die Relevanz um einen Wert erhöht.
+Die neuen Routinen aus SearchRelevance.pm sind jetzt in QuestionResultsOb.pm und in SearchDocId.pm eingebaut worden, SearchRelevance.pm wird nicht genutzt.
+#(Damit die Module für Löschabfragen und anderes, bei dem keine Relevanz gebraucht wird, kompatibel bleiben, muss wird wie bisher mit $self->{docidtable} eine tabelle ohne relevanz zurückgegeben. Diese wird aber aus der Relevanztabelle zusammen gestellt mit der Routine docidtablewithoutrelevance. Die Tabelle mit relevanzen wird in $self->{relevancetable} gespeichert.)# Jetzt so geändert, dass auch die Abfrage, welche Datensätze zum Löschen vorgemerkt (QuestionResults::deletetable_from_docids) werden, für QuestionResults::resultprint eine Relevanztabelle zurück gibt.
+In SearchDocId.pm musste eine ownerabfrage in replacequery eingebaut werden, da replace jetzt für den Abgleich der Nutzerrechte genbraucht wird.
+
+
+
+
+
+Sortierung der Datensätze beim Exportieren
+problem ist das bei tablefromdoc::flattablehash die doc-ids als schlüssel für den hash genutzt werden, noch keine Idee, ob und wie man das ändern kann
+Hash statt mit docids als schlüssel mit Zahlen in  der Reihenfolge der Datenbankergebnisse erstellen. Dann muss geprüft werden, ob irgendwo auf den Schlüssel als docid zugegriffen wird
+
+Lösung:
+	Printdetails, Schleife über ergebnishashref, statt $element wird jetzt der Wert für $ergebnishhash{$element}{docid} genutzt um an docid zu kommen, so dass keys für den hash beliebig gesetzt werden können. sort mit funktion für Zahlen versehen {$a<=>$b}
+ 	In export.pl Abschnitt um pdfs in zip datei zu packen, die keys  von resulthashref von docid in $element geändert
+	In Data2File.pm Sortierfunktion für Zahlen eingefügt {$a<=>$b}
+	TableFromDoc.pm statt docids als Schlüssel für den hash zu verwenden, einfach einen Zähler verwenden, der in der Reihenfolge, in der die Ergebnisse aus der Datenbank geholt werden, hochgezählt wird.
+
+
+dbserver v 10
+
+nur Dateien übernommen, die noch Funktion haben:
+	central.pl
+	dbstart.pl
+	details.pl
+	searchform.pl
+	export.pl
+	result.pl
+	importform.pl
+	exportform.pl
+	fileimport.pl
+	
+	htmlmodule:
+		DbDefs.pm
+		Html.pm
+		PDF.pm
+		PrintDetails.pm
+		Data2File.pm
+	
+	dbmodule:
+		CheckOwner.pm
+		DataInput.pm
+		DbConnect.pm
+		DocDelete.pm
+		QuestionResultsOb.pm
+		TablefromDoc.pm
+
+	dbfilter:
+		Bibtex2Hash.pm
+		Ris2Hash.pm
+
+
+Aenderungen:
+	Html.pm:
+	keine css Datei laden
+	sub menu auskommentiert
+
+	DbDefs.pm:
+	keine Abfrage ob / hinter $httppath da dieser in der Zeile davor
+	definiert wird
+
+	QuestionResultsOb.pm:
+	alte auskommentierte Teile entfernt
+	use dbmodule::searching; auskommentiert, da nicht gebraucht (?)
+		todo: 	HTML-Elemente in extra Modul packen 
+	
+	central.pl:
+	databasename von DbDefs.pm holen, nicht aus den übergebenen den CGI-Parametern
+		todo: 	ganz viel HTML in Module auslagern
+
+
+
+	result.pl:
+	use dbmodule::SearchDocId; auskommentiert
+	use dbmodule::QuestionResults; auskommentiert
+	Windows Zeilenumbrüche in Linux geändert
+	
+	dbstart.pl:
+	&Html::menu($httppath, $databasename); auskommentiert
+
+
+
+dbserver11
+	central.pl 
+	use dbmodule::SearchDocId; auskommentiert, in QuestionResultsOb.pm wieder eingefuegt, wird da benötigt
+	Zeile 399 Abfrage, ob beim Kopieren einer Datei filehandle angegeben ist, dann alten link zu pdf-Datei leeren, damit diese nicht ersetzt wird, sondern für den Original-Datensatz erhalten bleibt. Sollte langfristig wo anders geregelt werden (DataInput.pm oder PDF.pm), da sonst sehr unübersichtlich
+
+	QuestionResultsOb.pm 
+	use dbmodule::SearchDocId; wieder eimgefügt, um es direkt in den modulen zu laden, die auch darauf zugreifen und nicht von central.pl durch zu reichen
+	Zeilen 160 und 231-232 geändert für Sortierung nach Relevanz
+
+	SearchDocId.pm
+	Zeilen 11 - 397 als Kopie der alten Suche eingefügt um diese für Relevanzsuche anpassen zu können
+
+	DataInput.pm
+	Zeilen 542-543, 550, 559 um Zeitstempel in Document-Tabelle einzufügen
+
+	export.pl
+	Zeile 106 $month +1 um richtigen Monat in Namen der Exportdatei zu haben 
+	
+Datenbank: characterset von latin1 in utf geändert
+	in document DateTime-Spalte eingefügt um Zeitstempel für das Einfügen eines Datensatzes einfügen zu können
+
+	DataInput.pm
+	concat book und bookeditors und concat series und serieseditors repariert. Da falsche Schlüssel aus $datenhash{$datensatznr} abgefragt wurden und die editorstrings zu früh zusammengestzt wurden, klappte Verleich mit den in Datenbank vorhandenen Daten nicht
+	
+
+Neue Dateien zum Probieren:
+	searchform.pl.new.pl
+	dbmodule/QuestionResultsOb_new.pm
+	dbmodule/SearchDocId.pm.new
+	dbmodule/SearchDocId.pm.zwischen.pm
+
+
