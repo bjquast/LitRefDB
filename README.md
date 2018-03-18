@@ -325,7 +325,7 @@ Actions are:
 
 The export and import routines can be reached by pressing the `export data` or `import data` links at the bottom of the **Search frame**. The export or import page occurs in the Result list frame. There can be decided to export / import RIS or bibtex, import zip files with attached pdf-files and to export data without abstract or of a specific user.
 
-The import of zip files with pdfs will only work if they are linked in the RIS or bibtex file and are in a subfolder. Export some entries with pdfs as zip file (e. g. by choosing some in the Result list frame and selecting action export) and inspect the zip archive to see how the pdf files are stored and how the RIS / bibtex file references the pdf files.
+The import of zip files with pdfs will only work if they are linked in the RIS or bibtex file and are in a subfolder. Export some entries with pdfs as zip file (e. g. by choosing some in the Result list frame and selecting action export) and inspect the zip file to see where the pdf files are stored and how the RIS / bibtex file references the pdf files.
 
  
 
