@@ -29,7 +29,7 @@ mysql> exit
 
 Load database scheme
 
-`mysql dbserver12 -u root -p < .LitRefDB/database/dbserver12_schema.sql`
+`mysql dbserver12 -u root -p < ./LitRefDB/database/dbserver12_schema.sql`
 
 #### Issue #1
 
@@ -164,7 +164,7 @@ Copy the password file to the location as set in `./LitRefDB/cgi-bin/dbserver12/
 
 ```
 sudo mkdir /etc/dbserver12
-sudo cp dbserver/pwfile/dbpasswd /etc/dbserver12/
+sudo cp ./LitRefDB/pwfile/dbpasswd /etc/dbserver12/
 sudo chown -R www-data:www-data /etc/dbserver12
 sudo chmod -R g-rwx /etc/dbserver12
 ```
