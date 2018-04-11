@@ -190,7 +190,7 @@ sudo chown -R www-data:www-data /var/www/html/dbserver12
 Copy the Perl scripts to the cgi-bin folder and set the rights:
 
 ```
-sudo cp ./LitRefDB/cgi-bin/dbserver12 /usr/lib/cgi-bin/
+sudo cp -r ./LitRefDB/cgi-bin/dbserver12 /usr/lib/cgi-bin/
 sudo chown -R root:www-data /usr/lib/cgi-bin/dbserver12
 sudo chmod -R o-rwx /usr/lib/cgi-bin/dbserver12
 sudo chmod -R ug+rx /usr/lib/cgi-bin/dbserver12
