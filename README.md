@@ -246,7 +246,7 @@ Set up directory directives in your Apache configuration for **ssl** (e. g. /etc
   </Directory>
 
 # add a Directory directive that restrictes access to the dbserver12 dir in cgi-bin 
-  <Directory /usr/lib/cgi-bin/slides_loader>
+  <Directory /usr/lib/cgi-bin/dbserver12>
                AuthUserFile /etc/apache2/dbserver12_passwd
                AuthType Basic
                AuthName dbserver12
