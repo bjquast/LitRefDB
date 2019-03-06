@@ -559,7 +559,7 @@ my $inserttime = sprintf ("%04d%02d%02d%02d%02d%02d", $insertyear, $insertmonth 
 				  $datenhash{$datensatznr}{notizen}, $datenhash{$datensatznr}{isbn},
 				  $datenhash{$datensatznr}{abstract}, $datenhash{$datensatznr}{contactaddress},
 				  $datenhash{$datensatznr}{doubleflagg}, $datenhash{$datensatznr}{available}, 
-				  $datenhash{$datensatznr}{pdffile}, $inserttime);
+				  $datenhash{$datensatznr}{pdffile}, $inserttime) or die $insertdocument->errstr;
 
 
 
