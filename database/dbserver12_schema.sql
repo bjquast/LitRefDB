@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 5.7.21, for Linux (x86_64)
+-- MySQL dump 10.13  Distrib 5.7.25, for Linux (x86_64)
 --
 -- Host: localhost    Database: dbserver12
 -- ------------------------------------------------------
--- Server version	5.7.21-0ubuntu0.17.10.1
+-- Server version	5.7.25-0ubuntu0.18.04.2
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -30,7 +30,7 @@ CREATE TABLE `aut_writes_doc` (
   PRIMARY KEY (`aut_writes_docid`),
   KEY `authorid` (`authorid`),
   KEY `documentid` (`documentid`)
-) ENGINE=MyISAM AUTO_INCREMENT=466519 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=466567 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -46,7 +46,7 @@ CREATE TABLE `author` (
   `address` text,
   PRIMARY KEY (`authorid`),
   KEY `author_index` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=187044 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=187064 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,8 +141,8 @@ CREATE TABLE `document` (
   `verlagid` int(11) DEFAULT NULL,
   `thesis` text,
   `thesis_ort` text,
-  `startpage` int(11) DEFAULT '0',
-  `endpage` int(11) DEFAULT NULL,
+  `startpage` varchar(25) DEFAULT '0',
+  `endpage` varchar(25) DEFAULT NULL,
   `notizen` text,
   `isbn` varchar(20) DEFAULT NULL,
   `abstract` mediumtext,
@@ -165,7 +165,7 @@ CREATE TABLE `document` (
   KEY `institutionid` (`institutionid`),
   KEY `journalid` (`journalid`),
   FULLTEXT KEY `abstract` (`abstract`)
-) ENGINE=MyISAM AUTO_INCREMENT=285969 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=285985 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,7 +245,7 @@ CREATE TABLE `keyword` (
   `word` char(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`keywordid`),
   KEY `keyword_index` (`word`)
-) ENGINE=MyISAM AUTO_INCREMENT=109453 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=109466 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -262,7 +262,7 @@ CREATE TABLE `kword_in_doc` (
   PRIMARY KEY (`kword_in_docid`),
   KEY `documentid` (`documentid`),
   KEY `keywordid` (`keywordid`)
-) ENGINE=MyISAM AUTO_INCREMENT=1036160 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=1036211 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -366,7 +366,7 @@ CREATE TABLE `species_in_doc` (
   PRIMARY KEY (`species_in_docid`),
   KEY `documentid` (`documentid`),
   KEY `speciesid` (`speciesid`)
-) ENGINE=MyISAM AUTO_INCREMENT=27742 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=27744 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -381,7 +381,7 @@ CREATE TABLE `verlag` (
   `verlagname` text NOT NULL,
   `verlagort` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`verlagid`)
-) ENGINE=MyISAM AUTO_INCREMENT=11790 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11792 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -393,4 +393,4 @@ CREATE TABLE `verlag` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-03-12 22:02:59
+-- Dump completed on 2019-03-06 21:57:06
