@@ -205,7 +205,7 @@ sudo mkdir /usr/local/lib/site_perl
 sudo cp -r /usr/lib/cgi-bin/dbserver12/htmlmodule /usr/local/lib/site_perl/
 sudo cp -r /usr/lib/cgi-bin/dbserver12/dbmodule /usr/local/lib/site_perl/
 sudo cp -r /usr/lib/cgi-bin/dbserver12/dbfilter /usr/local/lib/site_perl/
-sudo chmod -R ugo+x /usr/local/lib/site_perl/
+sudo chmod -R ugo+rx /usr/local/lib/site_perl/
 ```
 
 ## Configure Apache2
